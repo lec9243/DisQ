@@ -597,8 +597,9 @@ Fixpoint subst_exp (e:exp) (x:var) (n:nat) :=
                    | SR q y => SR q y
                    | SRR q y => SRR q y
                    | QFT x b => QFT x b
-                   | RQFT x b => RQFT x b
+                   | RQFT x b => RQFT x b                
                    | Seq s1 s2 => Seq (subst_exp s1 x n) (subst_exp s2 x n)
+                   | others => others           
         end.
 
 Definition subst_mexp (e:maexp) (x:var) (n:nat) :=
