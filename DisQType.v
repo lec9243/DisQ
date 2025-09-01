@@ -170,7 +170,15 @@ Inductive m_locus_system {rmax:nat}
     | mem_sys : forall l m nm T1 T2 T1' T2' Ta Tb T T' env lp Ts, m = has_mea lp -> nm = has_no_mea lp
           -> @p_locus_system_mea rmax env T1 m  T1' -> @p_locus_systems rmax env T2 m  T2' ->
           glocus_locus l T T1 -> glocus_locus l T' T2 -> glocus_locus l Ta T1' -> glocus_locus l Tb T2'
-          -> m_locus_system env (T++T'++Ts) (Memb l lp) (Ta++Tb++Ts).
+          -> m_locus_system env (T++T'++Ts) (Memb l lp) (Ta++Tb++Ts)
+    | mem_lock :
+    forall env Tl Tl' l P Q,
+      m_locus_system env Tl (Memb l (P :: Q)) Tl' ->
+      m_locus_system env Tl (LockMemb l P Q) Tl'
+    | mem_unlock :
+    forall env Tl Tl' l P Q,
+      m_locus_system env Tl (LockMemb l P Q) Tl' ->
+      m_locus_system env Tl (Memb l (P :: Q)) Tl'.
 
 (** Config-level type **)
 Inductive c_locus_system {rmax:nat}
