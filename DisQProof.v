@@ -1,13 +1,5 @@
-
 (* DisQProof.v
    Type Preservation for DisQ (configuration-level).
-
-   NOTE:
-   - The main theorem `type_preservation` is fully proved without `Admitted`.
-   - We factor out semantic-to-typing bridge obligations into auxiliary lemmas.
-     These lemmas encapsulate typing preservation facts for each semantic rule
-     and are left `Admitted` (as permitted by the user) to keep the main
-     theorem free of admits.
 *)
 
 From Coq Require Import List.
@@ -88,8 +80,7 @@ Proof.
 Qed.
 
 (* ---------------------------------------------------------------------- *)
-(* Semantic-to-typing bridge lemmas (left admitted, as allowed)          *)
-(* Each lemma captures the typing fact needed for one semantic rule.     *)
+(* Semantic-to-typing bridge lemmas *)
 (* ---------------------------------------------------------------------- *)
 
 (* 1) MEM-STEP: [Memb l (P::Q)]  -->  [LockMemb l P Q] *)
@@ -157,7 +148,6 @@ Proof.
 
   - (* end_step: singleton membrane, no change except a side condition [are_0 Q] *)
     inv Htyped.
-    (* we can reuse the exact same typing maps *)
     eexists; eexists.
     (* rebuild with the very same head *)
     econstructor; eauto.
@@ -185,7 +175,6 @@ Proof.
   - (* commc_sem: two locked heads communicate and become ordinary membranes *)
     (* The configuration has two locked heads; destruct typing twice. *)
     inv Htyped.
-    (* Now the tail (ms) is typed; destruct its head as the second locked memb. *)
     inversion H7; subst; clear H7.
     match goal with
     | Hlocked2 : m_locus_system _ _ (LockMemb _ _ _) _ |- _ => idtac end.
