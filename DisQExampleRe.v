@@ -144,9 +144,7 @@ Lemma shor_disq_tau_normalizes :
     m_steps rmax aenv s0 shor_disq s1 shor_comm_nf.
 Proof.
   intros rmax aenv s0.
-  (* Plan: lock l ; lock u ; newchan ; lock l ; lock u ; comm ; done. *)
   eexists.
-
   (* 1) lock left (head) *)
   eapply ms_step.
   - eapply mem_step_ctx. apply mem_step.
@@ -154,7 +152,6 @@ Proof.
     eapply ms_step.
     + eapply step_ctx_cons.
       eapply mem_step_ctx. apply mem_step.
-    + (* Now we have [LockMemb l ... ; LockMemb u ... ; Memb r ...] *)
       eapply ms_step.
       * apply newchan_step.
       * (* 4) lock left again to expose Send *)
@@ -182,6 +179,5 @@ Proof.
   intros rmax aenv s0.
   destruct (shor_disq_tau_normalizes rmax aenv s0) as [s1 Hτ].
   exists s1. split; [exact Hτ|].
-  (* Pure syntax: concatenate [H^⊗n]; [CU]; [QFT] into one thread *)
   unfold collapse_only, shor_comm_nf, shor_seq; simpl; reflexivity.
 Qed.
