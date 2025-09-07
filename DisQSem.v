@@ -262,5 +262,15 @@ Inductive m_step {rmax:nat}
   | newchan_step : forall aenv lc1 lc2 c n m1 m2 P Q cf s,
                    m_step aenv s ((LockMemb lc1 (DP (NewCh c n) P) m1)::(LockMemb lc2 (DP (NewCh c n) Q) m2)::cf) (1%R, None) (lc1::[lc2]) 
                    ((([((c,BNum 0, BNum n),lc1)]++[((c,BNum 0,BNum n),lc2)]), 
-                        Cval (2^n) (fun i => if i =? 0 then (cinv_sqrt2,allfalse) else (cinv_sqrt2,alltrue)))::s) ((Memb lc1 (P::m1))::(Memb lc2 (Q::m2))::cf).
-
+                      Cval (2^n) (fun i => if i =? 0 then (cinv_sqrt2,allfalse) else (cinv_sqrt2,alltrue)))::s) ((Memb lc1 (P::m1))::(Memb lc2 (Q::m2))::cf)
+  | mem_step_ctx : forall  aenv s l P Q cf,
+        m_step aenv s [Memb l (P::Q)]
+             (Rdiv 1%R (INR (length (P::Q))), None) [l]
+             s [LockMemb l P Q] ->
+      m_step  aenv s (Memb l (P::Q) :: cf)
+             (Rdiv 1%R (INR (length (P::Q))), None) [l]
+             s (LockMemb l P Q :: cf)
+  | step_ctx_cons :
+    forall aenv s m c r lv ls s' c',
+      m_step  aenv s c (r,lv) ls s' c' ->
+      m_step  aenv s (m :: c) (r,lv) ls s' (m :: c').
